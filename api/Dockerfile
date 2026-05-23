@@ -13,7 +13,6 @@ RUN npm install --only=production
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the API runs on (assuming 3001 based on our plan)
 EXPOSE 3001
 
 # Start the application
