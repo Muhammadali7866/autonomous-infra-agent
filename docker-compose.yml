@@ -7,6 +7,12 @@ services:
       - PORT=3001
       - DATABASE_URL=postgres://admin:password@postgres:5432/research_db
       - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy   # Wait until postgres passes health check
+      redis:
+        condition: service_started   # Just wait for redis to start
+    restart: on-failure              # Auto-restart if api crashes
 
   # 2. Load Balancer service
   nginx:
@@ -43,7 +49,21 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=research_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data across restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d research_db"]
+      interval: 5s    # Check every 5 seconds
+      timeout: 5s     # Each check must respond within 5 seconds
+      retries: 5      # Mark unhealthy after 5 consecutive failures
 
-  # 6. Cache serivce
+  # 6. Cache service
   redis:
     image: redis:alpine
+    volumes:
+      - redis_data:/data  # Persist cache across restarts
+
+# Named volumes — Docker manages storage on your laptop
+volumes:
+  postgres_data:
+  redis_data:
