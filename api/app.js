@@ -20,16 +20,40 @@ const startTime = Date.now();
 
 app.get('/health', (req, res) => {
     const poolStats = pool.totalCount > 0 ? pool : { totalCount: 0, idleCount: 0 };
-    res.json({
-        status: 'ok',
-        uptime_seconds: Math.floor((Date.now() - startTime) / 1000),
-        request_count: requestCount,
-        avg_latency_ms: requestCount > 0 ? Math.round(totalLatency / requestCount) : 0,
-        error_rate_percent: requestCount > 0 ? +((errorCount / requestCount) * 100).toFixed(2) : 0,
-        db_connection_pool_used: poolStats.totalCount - poolStats.idleCount,
-        db_connection_pool_max: 20,
-        cache_hit_rate: requestCount > 0 ? +(cacheHits / requestCount).toFixed(2) : 0,
-    });
+    const uptime = Math.floor((Date.now() - startTime) / 1000);
+    const avgLatency = requestCount > 0 ? Math.round(totalLatency / requestCount) : 0;
+    const errorRate = requestCount > 0 ? +((errorCount / requestCount) * 100).toFixed(2) : 0;
+    const dbUsed = poolStats.totalCount - poolStats.idleCount;
+    const cacheHitRate = requestCount > 0 ? +(cacheHits / requestCount).toFixed(2) : 0;
+
+    const metrics = `
+# HELP api_uptime_seconds The total uptime of the API in seconds.
+# TYPE api_uptime_seconds gauge
+api_uptime_seconds ${uptime}
+
+# HELP api_request_count The total number of requests processed.
+# TYPE api_request_count counter
+api_request_count ${requestCount}
+
+# HELP api_avg_latency_ms The average latency in milliseconds.
+# TYPE api_avg_latency_ms gauge
+api_avg_latency_ms ${avgLatency}
+
+# HELP api_error_rate_percent The error rate percentage.
+# TYPE api_error_rate_percent gauge
+api_error_rate_percent ${errorRate}
+
+# HELP api_db_connection_pool_used The number of used DB connections.
+# TYPE api_db_connection_pool_used gauge
+api_db_connection_pool_used ${dbUsed}
+
+# HELP api_cache_hit_rate The cache hit rate.
+# TYPE api_cache_hit_rate gauge
+api_cache_hit_rate ${cacheHitRate}
+`.trim() + '\n';
+
+    res.set('Content-Type', 'text/plain');
+    res.send(metrics);
 });
 
 app.post('/process', async (req, res) => {

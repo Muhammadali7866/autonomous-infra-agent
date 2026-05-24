@@ -63,7 +63,6 @@ services:
     volumes:
       - redis_data:/data  # Persist cache across restarts
 
-# Named volumes — Docker manages storage on your laptop
 volumes:
   postgres_data:
   redis_data:
