@@ -4,10 +4,10 @@ import { sleep, check } from "k6";
 export const options = {
   //defne these options so k6 can read it while working
   stages: [
-    { duration: "30s", target: 5 }, // Warm up — normal low traffic
-    { duration: "10s", target: 100 }, // SPIKE — instant surge to 100 users
-    { duration: "60s", target: 100 }, // Hold  — sustained high load
-    { duration: "30s", target: 0 }, // Cool down — ramp back to zero
+    { duration: "30s", target: 5   }, // Warm up — normal low traffic
+    { duration: "10s", target: 500 }, // SPIKE — instant surge to 500 users
+    { duration: "3m",  target: 500 }, // Hold  — sustained high load 
+    { duration: "30s", target: 0   }, // Cool down — ramp back to zero
   ],
   thresholds: {
     // pass/fail criteria
