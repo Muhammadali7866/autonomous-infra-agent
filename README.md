@@ -49,7 +49,7 @@ The project features a containerized, distributed systems environment to serve a
 2. **Start the infrastructure stack:**
    This will boot up the API, Nginx, Prometheus, Grafana, Postgres, and Redis.
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. **Install agent dependencies:**
@@ -94,4 +94,5 @@ Deploy the AI agent, which reads the same Prometheus telemetry but utilizes pred
 ### 📊 Viewing Telemetry & Results
 - **Grafana Dashboards:** `http://localhost:3100` (Credentials: `admin` / `admin`)
 - **Prometheus Raw Metrics:** `http://localhost:9090`
+- **API Prometheus endpoint:** `http://localhost:8080/metrics`
 - **Agent Decision Logs:** The AI's reasoning and scaling decisions are automatically logged to `results/agent_decisions.csv` for post-experiment analysis.

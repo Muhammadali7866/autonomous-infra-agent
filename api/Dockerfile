@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 # This helps Docker cache the dependencies layer if package.json hasn't changed
 COPY package*.json ./
 
-# Install production dependencies
-RUN npm install --only=production
+# Install the exact locked production dependencies
+RUN npm ci --omit=dev
 
 # Copy the rest of the application code
 COPY . .

@@ -10,4 +10,4 @@ scrape_configs:
         type: 'A'
         port: 3001
         
-    metrics_path: '/health'   # this endpoint will call to get metricsof api
+    metrics_path: '/metrics'  # Prometheus exposition endpoint

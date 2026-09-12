@@ -1,4 +1,10 @@
 {
+  "name": "research-agent",
+  "version": "1.0.0",
+  "main": "agent.js",
+  "scripts": {
+    "test": "node --test agent.test.js"
+  },
   "dependencies": {
     "@google/genai": "^2.7.0",
     "@google/generative-ai": "^0.24.1",
